@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class PlayerAnimator : MonoBehaviour {
     private Animator anim;
-    [SerializeField] private PlayerMovement PlayerMovement;
+    [SerializeField] private Player Player;
     
     private void Awake() {
         anim = GetComponent<Animator>();
     }
 
     private void Update() {
-        anim.SetBool(AnimParams.IsWalking, PlayerMovement.IsWalking());
+        anim.SetBool(AnimParams.IsWalking, Player.IsWalking());
     }
 }

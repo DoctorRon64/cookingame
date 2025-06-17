@@ -8,8 +8,8 @@ public class InputManager : SingletonInit<InputManager>, ISingletonInit {
         playerInput.Enable();
     }
     
-    public Vector2 GetMovementVector() {
-        return playerInput.Player.Move.ReadValue<Vector2>().normalized;
+    public Vector2 GetMovementVectorRaw() {
+        return playerInput.Player.Move.ReadValue<Vector2>();
     }
 
     public Vector2 GetMovementVectorNormalized() {
