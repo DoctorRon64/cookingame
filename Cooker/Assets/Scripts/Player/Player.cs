@@ -1,8 +1,9 @@
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
     //References
-    [field: SerializeField] public bool IsWalking { get; private set; }
+    public bool IsWalking { get; private set; }
 
     [Header("Movement Settings")] 
     [SerializeField] private float moveSpeed = 7f;
@@ -15,19 +16,20 @@ public class Player : MonoBehaviour {
 
     private Vector3 lastMoveDirection = Vector3.zero;
 
-    private void Update() {
-        Move();
-        HandleInteractions();
+    private void Awake() {
+        InputManager.Instance.OnInteractButton.AddListener(HandleInteractions);
     }
     
-    public void HandleInteractions() {
-        if (!InputManager.Instance.GetInteractButton())  return;
+    private void Update() {
+        Move();
+    }
+
+    private void HandleInteractions(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
         Vector2 input = InputManager.Instance.GetMovementVectorNormalized();
         Vector3 moveDir = new Vector3(input.x, 0f, input.y);
 
         if (moveDir != Vector3.zero) lastMoveDirection = moveDir;
         Vector3 origin = transform.position + Vector3.up * 0.5f;
-        Debug.DrawRay(origin, lastMoveDirection * interactDistance, Color.red, 1f);
 
         if (!Physics.Raycast(origin, lastMoveDirection, out RaycastHit hit, interactDistance)) return;
         if (hit.collider.TryGetComponent(out Interactable interactable)) {
@@ -35,7 +37,7 @@ public class Player : MonoBehaviour {
         }
     }
 
-    public void Move() {
+    private void Move() {
         Vector2 input = InputManager.Instance.GetMovementVectorNormalized();
         Vector3 moveDir = new Vector3(input.x, 0f, input.y);
 
@@ -62,10 +64,7 @@ public class Player : MonoBehaviour {
             }
         }
 
-        if (canMove) {
-            transform.position += moveDir * moveSpeed * Time.deltaTime;
-        }
-
+        if (canMove) transform.position += moveDir * moveSpeed * Time.deltaTime;
         IsWalking = moveDir != Vector3.zero;
 
         if (!IsWalking) return;
