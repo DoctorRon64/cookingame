@@ -1,17 +1,41 @@
 using UnityEngine;
 
 public class Player : MonoBehaviour {
-    [Header("Movement Settings")]
+    //References
+    [field: SerializeField] public bool IsWalking { get; private set; }
+
+    [Header("Movement Settings")] 
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float rotationSpeed = 7f;
 
-    [Header("Collider Settings")]
+    [Header("Collider Settings")] 
     [SerializeField] private float playerHeight = 2f;
     [SerializeField] private float playerRadius = 0.7f;
+    [SerializeField] private float interactDistance = 1f;
 
-    private bool isWalking;
+    private Vector3 lastMoveDirection = Vector3.zero;
 
     private void Update() {
+        Move();
+        HandleInteractions();
+    }
+    
+    public void HandleInteractions() {
+        if (!InputManager.Instance.GetInteractButton())  return;
+        Vector2 input = InputManager.Instance.GetMovementVectorNormalized();
+        Vector3 moveDir = new Vector3(input.x, 0f, input.y);
+
+        if (moveDir != Vector3.zero) lastMoveDirection = moveDir;
+        Vector3 origin = transform.position + Vector3.up * 0.5f;
+        Debug.DrawRay(origin, lastMoveDirection * interactDistance, Color.red, 1f);
+
+        if (!Physics.Raycast(origin, lastMoveDirection, out RaycastHit hit, interactDistance)) return;
+        if (hit.collider.TryGetComponent(out Interactable interactable)) {
+            interactable.Interact();
+        }
+    }
+
+    public void Move() {
         Vector2 input = InputManager.Instance.GetMovementVectorNormalized();
         Vector3 moveDir = new Vector3(input.x, 0f, input.y);
 
@@ -27,7 +51,8 @@ public class Player : MonoBehaviour {
 
             if (canMove) {
                 moveDir = moveDirX;
-            } else {
+            }
+            else {
                 Vector3 moveDirZ = new Vector3(0f, 0f, moveDir.z).normalized;
                 canMove = !Physics.CapsuleCast(capsuleBottom, capsuleTop, playerRadius, moveDirZ, moveDistance);
 
@@ -41,12 +66,10 @@ public class Player : MonoBehaviour {
             transform.position += moveDir * moveSpeed * Time.deltaTime;
         }
 
-        isWalking = moveDir != Vector3.zero;
+        IsWalking = moveDir != Vector3.zero;
 
-        if (!isWalking) return;
+        if (!IsWalking) return;
         Quaternion targetRotation = Quaternion.LookRotation(moveDir);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
-
-    public bool IsWalking() => isWalking;
 }

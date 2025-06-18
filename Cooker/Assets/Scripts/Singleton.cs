@@ -1,4 +1,3 @@
-
 public interface ISingletonInit {
     protected internal void OnInitialize();
 }
@@ -15,6 +14,7 @@ public class Singleton<T> where T : new() {
 
     private static T instance;
 }
+
 public class SingletonInit<T> where T : ISingletonInit, new() {
 
     public static T Instance {
@@ -28,4 +28,3 @@ public class SingletonInit<T> where T : ISingletonInit, new() {
 
     private static T instance;
 }
-
