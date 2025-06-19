@@ -1,22 +1,26 @@
 ﻿using System;
 using UnityEngine;
 
-public class InputManager : SingletonInit<InputManager>, ISingletonInit {
+public class InputManager : Singleton<InputManager>, ISingleton {
     public Signal<UnityEngine.InputSystem.InputAction.CallbackContext> OnInteractButton{ get; private set; }
 
     private InputSystem_Actions playerInput;
 
-    void ISingletonInit.OnInitialize() {
+    void ISingleton.OnInitialize() {
         playerInput = new();
         playerInput.Enable();
+        playerInput.Player.Enable();
         OnInteractButton = new();
 
-        playerInput.Player.Interact.started += ctx => OnInteractButton?.Invoke(ctx);
+        playerInput.Player.Interact.performed += ctx => {
+            Debug.Log("Interact performed!");
+            OnInteractButton?.Invoke(ctx);
+        };
     }
 
-    ~InputManager() {
+    void ISingleton.OnDestroy() {
         playerInput?.Disable();
-        OnInteractButton.Clear();
+        OnInteractButton?.Clear();
     }
     
     public Vector2 GetMovementVectorRaw() =>  playerInput.Player.Move.ReadValue<Vector2>();

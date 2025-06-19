@@ -4,6 +4,10 @@ using UnityEngine;
 public class Player : MonoBehaviour {
     //References
     public bool IsWalking { get; private set; }
+    public Signal<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged { get; private set; }
+    public class OnSelectedCounterChangedEventArgs : EventArgs {
+        public ClearCounter selectedCounter;
+    }
 
     [Header("Movement Settings")] 
     [SerializeField] private float moveSpeed = 7f;
@@ -15,11 +19,21 @@ public class Player : MonoBehaviour {
     [SerializeField] private float interactDistance = 1f;
 
     private Vector3 lastMoveDirection = Vector3.zero;
+    private ClearCounter selectedCounter;
+    private static Player instance;
+    public static Player Instance { get; private set; }
 
     private void Awake() {
+        if (instance != null) {
+            Debug.LogError("Another Player is present!");
+        }
+        Instance = this;
+        
+        _ = InputManager.Instance;
+        OnSelectedCounterChanged = new();
         InputManager.Instance.OnInteractButton.AddListener(HandleInteractions);
     }
-    
+
     private void Update() {
         Move();
     }
@@ -32,9 +46,23 @@ public class Player : MonoBehaviour {
         Vector3 origin = transform.position + Vector3.up * 0.5f;
 
         if (!Physics.Raycast(origin, lastMoveDirection, out RaycastHit hit, interactDistance)) return;
-        if (hit.collider.TryGetComponent(out Interactable interactable)) {
-            interactable.Interact();
+        if (!hit.collider.TryGetComponent(out Interactable interactable)) return;
+
+        interactable.Interact();
+
+        if (interactable is ClearCounter clearCounter) {
+            ChangeSelectedCounter(clearCounter != selectedCounter ? clearCounter : null);
         }
+        else {
+            ChangeSelectedCounter(null);
+        }
+    }
+
+    private void ChangeSelectedCounter(ClearCounter counter) {
+        selectedCounter = counter;
+        OnSelectedCounterChanged?.Invoke(counter, new() {
+            selectedCounter = counter
+        });
     }
 
     private void Move() {

@@ -2,20 +2,16 @@ using System;
 using System.Collections.Generic;
 
 public abstract class SignalBase {
-    public delegate void signalDelegate();
-    public delegate void signalDelegate<T>(T data);
-    public delegate void signalDelegate<T, U>(T data, U data2);
-
-    protected List<Delegate> listeners = new();
+    protected readonly List<Delegate> listeners = new();
 
     internal void AddListener(Delegate listener) {
-        if (!listeners.Contains(listener)) {
+        if (listener != null && !listeners.Contains(listener))
             listeners.Add(listener);
-        }
     }
 
     internal void RemoveListener(Delegate listener) {
-        listeners.Remove(listener);
+        if (listener != null)
+            listeners.Remove(listener);
     }
 
     internal void Clear() {
@@ -24,31 +20,59 @@ public abstract class SignalBase {
 }
 
 public class Signal : SignalBase {
+    public void AddListener(Action callback) {
+        AddListener((Delegate)callback);
+    }
+
+    public void RemoveListener(Action callback) {
+        RemoveListener((Delegate)callback);
+    }
+
     public void Invoke() {
         foreach (Delegate listener in listeners) {
-            listener.DynamicInvoke();
-            //((Action)listener)?.Invoke();
+            (listener as Action)?.Invoke();
         }
     }
 }
 
 public class Signal<T> : SignalBase {
-    public void AddListener(Action<T> listener) => base.AddListener(listener);
-    public void RemoveListener(Action<T> listener) => base.RemoveListener(listener);
-    
-    public void Invoke(T parameter) {
+    public void AddListener(Action<T> callback) {
+        AddListener((Delegate)callback);
+    }
+
+    public void RemoveListener(Action<T> callback) {
+        RemoveListener((Delegate)callback);
+    }
+
+    public void Invoke(T arg) {
         foreach (Delegate listener in listeners) {
-            listener.DynamicInvoke(parameter);
-            //((Action<T>)listener)?.Invoke(parameter);
+            (listener as Action<T>)?.Invoke(arg);
         }
+    }
+    
+    public void Invoke(object sender, T arg) {
+        foreach (Delegate listener in listeners) {
+            (listener as EventHandler<T>)?.Invoke(sender, arg);
+        }
+    }
+
+    public void AddListener(EventHandler<T> callback) {
+        AddListener((Delegate)callback);
     }
 }
 
 public class Signal<T, U> : SignalBase {
-    public void Invoke(T parameter, U parameter2) {
+    public void AddListener(Action<T, U> callback) {
+        AddListener((Delegate)callback);
+    }
+
+    public void RemoveListener(Action<T, U> callback) {
+        RemoveListener((Delegate)callback);
+    }
+
+    public void Invoke(T arg1, U arg2) {
         foreach (Delegate listener in listeners) {
-            listener.DynamicInvoke(parameter, parameter2);
-            //((Action<T, U>)listener)?.Invoke(parameter, parameter2);
+            (listener as Action<T, U>)?.Invoke(arg1, arg2);
         }
     }
 }
