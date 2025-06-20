@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class InputManager : Singleton<InputManager>, ISingleton {
     public Signal<UnityEngine.InputSystem.InputAction.CallbackContext> OnInteractButton { get; private set; }
-    public Signal<UnityEngine.InputSystem.InputAction.CallbackContext> OnCrouchButton { get; private set; }
+    public Signal OnCrouchButton { get; private set; }
 
     private InputSystem_Actions playerInput;
 
@@ -18,7 +18,7 @@ public class InputManager : Singleton<InputManager>, ISingleton {
         
         //Invoke Events
         playerInput.Player.Interact.performed += ctx => OnInteractButton?.Invoke(ctx);
-        playerInput.Player.Crouch.performed += ctx => OnCrouchButton?.Invoke(ctx);
+        playerInput.Player.Crouch.performed += ctx => OnCrouchButton?.Invoke();
     }
 
     void ISingleton.OnDestroy() {

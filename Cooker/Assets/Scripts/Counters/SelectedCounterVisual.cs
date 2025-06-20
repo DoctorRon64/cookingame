@@ -12,7 +12,7 @@ public class SelectedCounterVisual : MonoBehaviour {
 
     private void OnSelectCounterChanged(object sender, Player.OnSelectedCounterChangedEventArgs e) {
         //Debug.Log(sender?.ToString(), e.selectedCounter);
-        ActivatedObject(e.highlightedCounter == counter);
+        ActivatedObject(e.HighlightedCounter == counter);
     }
 
     private void ActivatedObject(bool value) => counterVisual.SetActive(value);

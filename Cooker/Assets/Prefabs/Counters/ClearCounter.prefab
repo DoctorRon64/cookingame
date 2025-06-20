@@ -69,8 +69,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4db47fe8b5d46f39425722449831292, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <CounterTopPoint>k__BackingField: {fileID: 5985544036831111783}
+  <KitchenObjectHoldPoint>k__BackingField: {fileID: 5985544036831111783}
   kitchenObjectAsset: {fileID: 0}
+  secondClearCounter: {fileID: 0}
+  booljo: 0
 --- !u!1 &5115999110713602319
 GameObject:
   m_ObjectHideFlags: 0

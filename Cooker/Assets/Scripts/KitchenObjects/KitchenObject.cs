@@ -1,20 +1,18 @@
-﻿using UnityEngine;
+﻿using Interfaces;
+using UnityEngine;
 
 public class KitchenObject : MonoBehaviour {
     [field: SerializeField] public KitchenObjectAsset Asset { get; private set; }
-    public ClearCounter Counter { get; private set; }
+    public IKitchenObjectParent KitchenObjectParent { get; private set; }
 
-    public void SetParentCounter(ClearCounter newCounter) {
-        if (Counter != null) {
-            Counter.ClearKitchenObject();
-        }
-
-        Counter = newCounter;
+    public void SetKitchenObjectParent(IKitchenObjectParent newParent) {
+        KitchenObjectParent?.ClearKitchenObject();
+        KitchenObjectParent = newParent;
         
-        if (newCounter.HasKitchenObject()) Debug.LogError("counter already has object");
+        if (newParent.HasKitchenObject()) Debug.LogError("counter already has object");
         
-        newCounter.SetKitchenObject(this);
-        transform.SetParent(newCounter.CounterTopPoint);
+        newParent.SetKitchenObject(this);
+        transform.SetParent(newParent.KitchenObjectHoldPoint);
         transform.localPosition = Vector3.zero;
     }
 }

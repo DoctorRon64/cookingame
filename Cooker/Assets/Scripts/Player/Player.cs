@@ -1,15 +1,18 @@
 using System;
+using Interfaces;
 using UnityEngine;
 
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour, IKitchenObjectParent {
     // Events
-    public class OnSelectedCounterChangedEventArgs : EventArgs { public ClearCounter highlightedCounter; }
-    public Signal<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged { get; private set; }
+    public class OnSelectedCounterChangedEventArgs : EventArgs { public ClearCounter HighlightedCounter; }
+    [field: SerializeField] public Signal<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged { get; private set; }
 
     // State
     public bool IsWalking { get; private set; }
     public static Player Instance { get; private set; }
-
+    public KitchenObject KitchenObject { get; private set; }
+    
+    [field: SerializeField] public Transform KitchenObjectHoldPoint { get; private set; }
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float rotationSpeed = 7f;
     [SerializeField] private float playerHeight = 2f;
@@ -19,7 +22,7 @@ public class Player : MonoBehaviour {
     private Vector3 lastMoveDirection = Vector3.forward;
     private ClearCounter selectedCounter;
     private ClearCounter highlightedCounter;
-
+    
     private void Awake() {
         if (Instance != null) {
             Debug.LogError("More than one Player instance detected!");
@@ -87,7 +90,7 @@ public class Player : MonoBehaviour {
 
         highlightedCounter = newCounter;
         OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs {
-            highlightedCounter = highlightedCounter
+            HighlightedCounter = highlightedCounter
         });
     }
 
@@ -99,7 +102,11 @@ public class Player : MonoBehaviour {
         selectedCounter = highlightedCounter != selectedCounter ? highlightedCounter : null;
 
         OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs {
-            highlightedCounter = highlightedCounter
+            HighlightedCounter = highlightedCounter
         });
     }
+
+    public void SetKitchenObject(KitchenObject kitchenObject) => KitchenObject = kitchenObject;
+    public void ClearKitchenObject() => KitchenObject = null;
+    public bool HasKitchenObject() => KitchenObject != null;
 }
