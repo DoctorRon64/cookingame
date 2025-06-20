@@ -2,20 +2,20 @@ using System;
 using System.Collections.Generic;
 
 public abstract class SignalBase {
-    protected readonly List<Delegate> listeners = new();
+    protected readonly List<Delegate> Listeners = new();
 
     internal void AddListener(Delegate listener) {
-        if (listener != null && !listeners.Contains(listener))
-            listeners.Add(listener);
+        if (listener != null && !Listeners.Contains(listener))
+            Listeners.Add(listener);
     }
 
     internal void RemoveListener(Delegate listener) {
         if (listener != null)
-            listeners.Remove(listener);
+            Listeners.Remove(listener);
     }
 
     internal void Clear() {
-        listeners.Clear();
+        Listeners.Clear();
     }
 }
 
@@ -29,7 +29,7 @@ public class Signal : SignalBase {
     }
 
     public void Invoke() {
-        foreach (Delegate listener in listeners) {
+        foreach (Delegate listener in Listeners) {
             (listener as Action)?.Invoke();
         }
     }
@@ -45,13 +45,13 @@ public class Signal<T> : SignalBase {
     }
 
     public void Invoke(T arg) {
-        foreach (Delegate listener in listeners) {
+        foreach (Delegate listener in Listeners) {
             (listener as Action<T>)?.Invoke(arg);
         }
     }
     
     public void Invoke(object sender, T arg) {
-        foreach (Delegate listener in listeners) {
+        foreach (Delegate listener in Listeners) {
             (listener as EventHandler<T>)?.Invoke(sender, arg);
         }
     }
@@ -71,7 +71,7 @@ public class Signal<T, U> : SignalBase {
     }
 
     public void Invoke(T arg1, U arg2) {
-        foreach (Delegate listener in listeners) {
+        foreach (Delegate listener in Listeners) {
             (listener as Action<T, U>)?.Invoke(arg1, arg2);
         }
     }

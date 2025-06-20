@@ -11,8 +11,8 @@ public class SelectedCounterVisual : MonoBehaviour {
     }
 
     private void OnSelectCounterChanged(object sender, Player.OnSelectedCounterChangedEventArgs e) {
-        Debug.Log(sender?.ToString(), e.selectedCounter);
-        ActivatedObject(e.selectedCounter == counter);
+        //Debug.Log(sender?.ToString(), e.selectedCounter);
+        ActivatedObject(e.highlightedCounter == counter);
     }
 
     private void ActivatedObject(bool value) => counterVisual.SetActive(value);
