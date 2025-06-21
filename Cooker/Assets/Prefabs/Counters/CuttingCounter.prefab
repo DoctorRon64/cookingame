@@ -299,4 +299,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <KitchenObjectHoldPoint>k__BackingField: {fileID: 3400527071624245651}
-  cutKitchenObjectAsset: {fileID: 11400000, guid: 80277cb295158964e9939eac589680f7, type: 2}
+  recipesArray:
+  - {fileID: 11400000, guid: 08df99cd14b754d41ac7c0074d8e1030, type: 2}
+  - {fileID: 11400000, guid: c50bd858765ec4d4ab0866519b3a7cce, type: 2}
+  - {fileID: 11400000, guid: 48a8f277f9cbbf54e87934fff77b84e5, type: 2}

@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40cd921ac3ac45c7b4605838dca55398, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <asset>k__BackingField: {fileID: 11400000, guid: da6bfa70eb14bc040bacbe16955253d3, type: 2}
+  <Asset>k__BackingField: {fileID: 11400000, guid: da6bfa70eb14bc040bacbe16955253d3, type: 2}
 --- !u!1001 &6476403826441174206
 PrefabInstance:
   m_ObjectHideFlags: 0

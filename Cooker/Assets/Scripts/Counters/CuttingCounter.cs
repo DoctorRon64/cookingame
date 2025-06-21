@@ -3,11 +3,13 @@ using UnityEngine;
 
 namespace Counters {
     public class CuttingCounter : BaseCounter {
-        [SerializeField] private KitchenObjectAsset cutKitchenObjectAsset;
-        
+        [SerializeField] private CuttingRecipeAsset[] recipesArray;
+
         public override void Interact(Player player) {
             if (!HasKitchenObject() && player.HasKitchenObject()) {
-                player.KitchenObject.SetKitchenObjectParent(this);
+                if (HasRecipeWithInput(player.KitchenObject.Asset)) {
+                    player.KitchenObject.SetKitchenObjectParent(this);
+                }
             }
             else if (HasKitchenObject() && !player.HasKitchenObject()) {
                 KitchenObject.SetKitchenObjectParent(player);
@@ -18,11 +20,28 @@ namespace Counters {
         }
 
         public override void InteractAlt(Player player) {
-            if (!HasKitchenObject()) return;
-            //cut the object
-            
+            if (!HasKitchenObject() || !HasRecipeWithInput(KitchenObject.Asset)) return;
+            KitchenObjectAsset output = GetOutputForInput(KitchenObject.Asset);
             KitchenObject.DestorySelf();
-            KitchenObject.SpawnKitchenObject(cutKitchenObjectAsset, this);
+            KitchenObject.SpawnKitchenObject(output, this);
+        }
+        
+        private bool HasRecipeWithInput(KitchenObjectAsset asset) {
+            foreach (CuttingRecipeAsset recipe in recipesArray) {
+                if (recipe.Input == asset) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        private KitchenObjectAsset GetOutputForInput(KitchenObjectAsset input) {
+            foreach (CuttingRecipeAsset recipe in recipesArray) {
+                if (recipe.Input == input) {
+                    return recipe.Output;
+                }
+            }
+            return null;
         }
     }
 }
