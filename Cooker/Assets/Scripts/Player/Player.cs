@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour, IKitchenObjectParent {
     // Events
-    public class OnSelectedCounterChangedEventArgs : EventArgs { public INteractable HighlightedCounter; }
+    public class OnSelectedCounterChangedEventArgs : EventArgs { public IInteractable HighlightedCounter; }
     [field: SerializeField] public Signal<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged { get; private set; }
 
     // State
@@ -21,8 +21,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
     [SerializeField] private float interactDistance = 1f;
 
     private Vector3 lastMoveDirection = Vector3.forward;
-    private INteractable selectedCounter;
-    private INteractable highlightedCounter;
+    private IInteractable selectedCounter;
+    private IInteractable highlightedCounter;
     
     private void Awake() {
         if (Instance != null) {
@@ -30,7 +30,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
             Destroy(gameObject);
             return;
         }
-
         Instance = this;
         OnSelectedCounterChanged = new();
 
@@ -87,7 +86,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
             hit.collider.TryGetComponent(out newCounter);
         }
 
-        if (highlightedCounter == newCounter) return;
+        if ((BaseCounter)highlightedCounter == newCounter) return;
 
         highlightedCounter = newCounter;
         OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs {
@@ -98,7 +97,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
     private void HandleInteraction(UnityEngine.InputSystem.InputAction.CallbackContext ctx) {
         if (highlightedCounter == null) return;
 
-        highlightedCounter.Interact();
+        highlightedCounter.Interact(this);
 
         selectedCounter = highlightedCounter != selectedCounter ? highlightedCounter : null;
 

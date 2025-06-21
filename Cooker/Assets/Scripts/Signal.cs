@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
+using UnityEngine;
 
 public abstract class SignalBase {
     protected readonly List<Delegate> Listeners = new();
@@ -49,7 +51,7 @@ public class Signal<T> : SignalBase {
             (listener as Action<T>)?.Invoke(arg);
         }
     }
-    
+
     public void Invoke(object sender, T arg) {
         foreach (Delegate listener in Listeners) {
             (listener as EventHandler<T>)?.Invoke(sender, arg);
@@ -62,13 +64,8 @@ public class Signal<T> : SignalBase {
 }
 
 public class Signal<T, U> : SignalBase {
-    public void AddListener(Action<T, U> callback) {
-        AddListener((Delegate)callback);
-    }
-
-    public void RemoveListener(Action<T, U> callback) {
-        RemoveListener((Delegate)callback);
-    }
+    public void AddListener(Action<T, U> callback) => AddListener((Delegate)callback);
+    public void RemoveListener(Action<T, U> callback) => RemoveListener((Delegate)callback);
 
     public void Invoke(T arg1, U arg2) {
         foreach (Delegate listener in Listeners) {
