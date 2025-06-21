@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using KitchenObjects;
+using UnityEngine;
 
 namespace Interfaces {
     public interface IKitchenObjectParent {

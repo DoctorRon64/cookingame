@@ -1,11 +1,10 @@
-﻿using Interfaces;
-using KitchenObjects;
+﻿using KitchenObjects;
 using UnityEngine;
 
 namespace Counters {
-    public class ClearCounter : BaseCounter {
-        [SerializeField] private KitchenObjectAsset kitchenObjectAsset;
-
+    public class CuttingCounter : BaseCounter {
+        [SerializeField] private KitchenObjectAsset cutKitchenObjectAsset;
+        
         public override void Interact(Player player) {
             if (!HasKitchenObject() && player.HasKitchenObject()) {
                 player.KitchenObject.SetKitchenObjectParent(this);
@@ -19,6 +18,11 @@ namespace Counters {
         }
 
         public override void InteractAlt(Player player) {
+            if (!HasKitchenObject()) return;
+            //cut the object
+            
+            KitchenObject.DestorySelf();
+            KitchenObject.SpawnKitchenObject(cutKitchenObjectAsset, this);
         }
     }
 }

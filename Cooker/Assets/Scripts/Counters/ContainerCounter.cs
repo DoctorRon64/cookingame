@@ -1,5 +1,6 @@
 ﻿using System;
 using Interfaces;
+using KitchenObjects;
 using UnityEngine;
 
 namespace Counters {
@@ -9,22 +10,11 @@ namespace Counters {
         
         public override void Interact(Player player) {
             if (player.HasKitchenObject()) return;
-            Transform instance = Instantiate(kitchenObjectAsset.Prefab.transform);
-            instance.GetComponent<KitchenObject>().SetKitchenObjectParent(player);
-            
+            KitchenObject.SpawnKitchenObject(kitchenObjectAsset, player);
             OnPlayerGrabbedObject?.Invoke(EventArgs.Empty);
+        }
 
-
-
-
-            //TODO clear comments
-            /*if (!HasKitchenObject()) {
-                Transform instance = Instantiate(kitchenObjectAsset.Prefab.transform);
-                instance.GetComponent<KitchenObject>().SetKitchenObjectParent(this);
-            }
-            else {
-                KitchenObject.SetKitchenObjectParent(Player.Instance);
-            }*/
+        public override void InteractAlt(Player player) {
         }
     }
 }
