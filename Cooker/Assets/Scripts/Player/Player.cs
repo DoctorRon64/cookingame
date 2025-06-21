@@ -1,10 +1,11 @@
 using System;
+using Counters;
 using Interfaces;
 using UnityEngine;
 
 public class Player : MonoBehaviour, IKitchenObjectParent {
     // Events
-    public class OnSelectedCounterChangedEventArgs : EventArgs { public ClearCounter HighlightedCounter; }
+    public class OnSelectedCounterChangedEventArgs : EventArgs { public INteractable HighlightedCounter; }
     [field: SerializeField] public Signal<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged { get; private set; }
 
     // State
@@ -20,8 +21,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
     [SerializeField] private float interactDistance = 1f;
 
     private Vector3 lastMoveDirection = Vector3.forward;
-    private ClearCounter selectedCounter;
-    private ClearCounter highlightedCounter;
+    private INteractable selectedCounter;
+    private INteractable highlightedCounter;
     
     private void Awake() {
         if (Instance != null) {
@@ -81,7 +82,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
     private void DetectCounterInFront() {
         Vector3 origin = transform.position + Vector3.up * 0.5f;
 
-        ClearCounter newCounter = null;
+        BaseCounter newCounter = null;
         if (Physics.Raycast(origin, lastMoveDirection, out RaycastHit hit, interactDistance)) {
             hit.collider.TryGetComponent(out newCounter);
         }

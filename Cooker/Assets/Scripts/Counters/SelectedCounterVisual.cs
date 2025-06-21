@@ -1,19 +1,23 @@
-using System;
-using UnityEditor.VersionControl;
 using UnityEngine;
 
-public class SelectedCounterVisual : MonoBehaviour {
-    [SerializeField] private ClearCounter counter;
-    [SerializeField] private GameObject counterVisual;
+namespace Counters {
+    public class SelectedCounterVisual : MonoBehaviour {
+        [SerializeField] private BaseCounter baseCounter;
+        [SerializeField] private GameObject[] visualGameObjects;
 
-    private void Start() {
-        Player.Instance.OnSelectedCounterChanged.AddListener(OnSelectCounterChanged);
+        private void Start() {
+            Player.Instance.OnSelectedCounterChanged.AddListener(OnSelectCounterChanged);
+        }
+
+        private void OnSelectCounterChanged(object sender, Player.OnSelectedCounterChangedEventArgs e) {
+            //Debug.Log(sender?.ToString(), e.selectedCounter);
+            ActivatedObject((BaseCounter)e.HighlightedCounter == baseCounter);
+        }
+
+        private void ActivatedObject(bool value) {
+            foreach (GameObject obj in visualGameObjects) {
+                obj.SetActive(value);
+            }
+        } 
     }
-
-    private void OnSelectCounterChanged(object sender, Player.OnSelectedCounterChangedEventArgs e) {
-        //Debug.Log(sender?.ToString(), e.selectedCounter);
-        ActivatedObject(e.HighlightedCounter == counter);
-    }
-
-    private void ActivatedObject(bool value) => counterVisual.SetActive(value);
 }
