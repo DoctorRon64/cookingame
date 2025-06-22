@@ -3,8 +3,10 @@ using UnityEngine;
 
 public class InputManager : Singleton<InputManager>, ISingleton {
     public Signal<UnityEngine.InputSystem.InputAction.CallbackContext> OnInteractButton { get; private set; }
-    public Signal OnAttackButton { get; private set; }
     public Signal OnCrouchButton { get; private set; }
+    public Signal OnAttackButton { get; private set; }
+    public Signal OnAttackHoldStarted { get; private set; }
+    public Signal OnAttackHoldCanceled { get; private set; }
 
     private InputSystem_Actions playerInput;
 
@@ -15,13 +17,17 @@ public class InputManager : Singleton<InputManager>, ISingleton {
         
         //declare Events
         OnInteractButton = new();
-        OnAttackButton = new();
         OnCrouchButton = new();
+        OnAttackButton = new();
+        OnAttackHoldStarted = new();
+        OnAttackHoldCanceled = new();
         
         //Invoke Events
         playerInput.Player.Interact.performed += ctx => OnInteractButton?.Invoke(ctx);
         playerInput.Player.Crouch.performed += ctx => OnCrouchButton?.Invoke();
         playerInput.Player.Attack.performed += ctx => OnAttackButton?.Invoke();
+        playerInput.Player.Attack.started += ctx => OnAttackHoldStarted?.Invoke();
+        playerInput.Player.Attack.canceled += ctx => OnAttackHoldCanceled?.Invoke();
     }
 
     void ISingleton.OnDestroy() {

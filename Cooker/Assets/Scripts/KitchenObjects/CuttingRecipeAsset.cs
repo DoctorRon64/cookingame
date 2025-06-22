@@ -6,4 +6,5 @@ using UnityEngine;
 public class CuttingRecipeAsset : DataAsset {
     public KitchenObjectAsset Input;
     public KitchenObjectAsset Output;
+    public float CuttingProgressMax;
 }

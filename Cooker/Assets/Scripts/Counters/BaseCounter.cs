@@ -6,9 +6,12 @@ namespace Counters {
     public abstract class BaseCounter : MonoBehaviour, IInteractable, IKitchenObjectParent {
         [field: SerializeField] public Transform KitchenObjectHoldPoint { get; private set; }
         protected KitchenObject KitchenObject { get; private set; }
-        
+
         public abstract void Interact(Player player);
         public abstract void InteractAlt(Player player);
+
+        public abstract void InteractAltHold(Player player);
+        public abstract void InteractAltHoldCancel(Player player);
 
         public void SetKitchenObject(KitchenObject kitchenObject) => KitchenObject = kitchenObject;
         public void ClearKitchenObject() => KitchenObject = null;

@@ -38,6 +38,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
         _ = InputManager.Instance;
         InputManager.Instance.OnInteractButton.AddListener(HandleInteraction);
         InputManager.Instance.OnAttackButton.AddListener(HandleInteractionAlt);
+        InputManager.Instance.OnAttackHoldStarted.AddListener(() => highlightedCounter?.InteractAltHold(this));  
+        InputManager.Instance.OnAttackHoldCanceled.AddListener(() => highlightedCounter?.InteractAltHoldCancel(this));  
     }
 
     private void Update() {

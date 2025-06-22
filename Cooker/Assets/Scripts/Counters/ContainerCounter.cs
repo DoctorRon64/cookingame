@@ -16,5 +16,11 @@ namespace Counters {
 
         public override void InteractAlt(Player player) {
         }
+
+        public override void InteractAltHold(Player player) {
+        }
+
+        public override void InteractAltHoldCancel(Player player) {
+        }
     }
 }
