@@ -17,14 +17,5 @@ namespace Counters {
                 Debug.LogWarning("CANT PLACE THAT OBJECT HERE");
             }
         }
-
-        public override void InteractAlt(Player player) {
-        }
-
-        public override void InteractAltHold(Player player) {
-        }
-
-        public override void InteractAltHoldCancel(Player player) {
-        }
     }
 }

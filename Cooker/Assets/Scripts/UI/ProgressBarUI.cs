@@ -1,13 +1,16 @@
 using Counters;
+using Interfaces;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ProgressBarUI : MonoBehaviour {
-    [SerializeField] private CuttingCounter counter;
+    [SerializeField] private GameObject hasProgressObj;
     [SerializeField] private Image progressBar;
-
+    private IHasProgress hasProgress;
+    
     private void Start() {
-        counter.OnProgressChanged.AddListener((nStruct) => ProgressChanged(nStruct.ProgressNormalizeFloat));
+        hasProgress = hasProgressObj.GetComponent<IHasProgress>();
+        hasProgress.OnProgressChanged.AddListener((nStruct) => ProgressChanged(nStruct.ProgressNormalizeFloat));
         progressBar.fillAmount = 0f;
         UpdateVisibility(false);
     }

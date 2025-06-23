@@ -6,12 +6,11 @@ using KitchenObjects;
 using UnityEngine;
 
 namespace Counters {
-    public class CuttingCounter : BaseCounter {
+    public class CuttingCounter : BaseCounter, IHasProgress {
         [SerializeField] private CuttingRecipeAsset[] recipesArray;
         [SerializeField] private float cancelCutDistance = 1.5f;
         public readonly Signal OnCutting = new Signal();
-        public readonly Signal<ProgressNormalize> OnProgressChanged = new();
-        public struct ProgressNormalize { public float ProgressNormalizeFloat; }
+        public Signal<IHasProgress.ProgressNormalize> OnProgressChanged { get; } = new();
         
         private float cuttingDuration;
         private float cuttingTimer;
@@ -26,9 +25,10 @@ namespace Counters {
                 if (!HasRecipeWithInput(player.KitchenObject.Asset)) return;
                 player.KitchenObject.SetKitchenObjectParent(this);
                 ResetCuttingState();
-                
+
                 CuttingRecipeAsset recipe = GetCuttingRecipeByInput(KitchenObject.Asset);
-                OnProgressChanged?.Invoke(new () { ProgressNormalizeFloat = cuttingDuration /  recipe.CuttingProgressMax});
+                OnProgressChanged?.Invoke(
+                    new() { ProgressNormalizeFloat = cuttingDuration / recipe.CuttingProgressMax });
             }
             else if (HasKitchenObject() && !player.HasKitchenObject()) {
                 KitchenObject.SetKitchenObjectParent(player);
@@ -44,12 +44,12 @@ namespace Counters {
 
             CuttingRecipeAsset recipe = GetCuttingRecipeByInput(KitchenObject.Asset);
             if (cuttingProgress < recipe.cuttingProgressMax) return;
-            
+
             KitchenObjectAsset output = GetOutputByInput(KitchenObject.Asset);
             KitchenObject.DestorySelf();
             KitchenObject.SpawnKitchenObject(output, this);*/
         }
-        
+
         public override void InteractAltHold(Player player) {
             if (!HasKitchenObject() || !HasRecipeWithInput(KitchenObject.Asset)) return;
 
@@ -60,19 +60,18 @@ namespace Counters {
 
         public override void InteractAltHoldCancel(Player player) {
             ResetCuttingState();
-            
+
             if (cuttingCoroutine == null) return;
             StopCoroutine(cuttingCoroutine);
             cuttingCoroutine = null;
-
         }
-        
+
         private IEnumerator CuttingProgressCoroutine(float duration, Player player) {
             cuttingDuration = duration;
             cuttingTimer = 0f;
-            
+
             CuttingRecipeAsset recipe = GetCuttingRecipeByInput(KitchenObject.Asset);
-           
+
             int lastInt = -1;
             while (cuttingTimer < cuttingDuration) {
                 cuttingTimer += Time.deltaTime;
@@ -81,7 +80,7 @@ namespace Counters {
                     CancelCutting();
                     yield break;
                 }
-                
+
                 int currentWhole = Mathf.FloorToInt(cuttingTimer * 2f);
                 if (currentWhole != lastInt) {
                     lastInt = currentWhole;
@@ -89,14 +88,14 @@ namespace Counters {
                     Debug.Log($"Passed whole unit: {stepValue}"); // or call a method/event
                     OnCutting?.Invoke();
                 }
-                
-                OnProgressChanged?.Invoke(new () { ProgressNormalizeFloat = cuttingTimer /  recipe.CuttingProgressMax});
-                
+
+                OnProgressChanged?.Invoke(new() { ProgressNormalizeFloat = cuttingTimer / recipe.CuttingProgressMax });
+
                 yield return null;
             }
-            
-            OnProgressChanged?.Invoke(new () { ProgressNormalizeFloat = 0f }); 
-            
+
+            OnProgressChanged?.Invoke(new() { ProgressNormalizeFloat = 0f });
+
             KitchenObjectAsset output = GetOutputByInput(KitchenObject.Asset);
             KitchenObject.DestorySelf();
             KitchenObject.SpawnKitchenObject(output, this);
@@ -104,33 +103,34 @@ namespace Counters {
             ResetCuttingState();
             cuttingCoroutine = null;
         }
-        
+
         private void CancelCutting() {
             if (cuttingCoroutine != null) {
                 StopCoroutine(cuttingCoroutine);
                 cuttingCoroutine = null;
             }
+
             ResetCuttingState();
-            OnProgressChanged?.Invoke(new () { ProgressNormalizeFloat = 0f });
+            OnProgressChanged?.Invoke(new() { ProgressNormalizeFloat = 0f });
         }
-        
+
         private void ResetCuttingState() {
             if (KitchenObject != null && KitchenObject.Asset != null) {
                 CuttingRecipeAsset recipe = GetCuttingRecipeByInput(KitchenObject.Asset);
                 if (recipe != null) {
-                    OnProgressChanged?.Invoke(new () { ProgressNormalizeFloat = 0f });
+                    OnProgressChanged?.Invoke(new() { ProgressNormalizeFloat = 0f });
                 }
             }
-            
+
             cuttingTimer = 0f;
             cuttingDuration = 0f;
         }
-        
+
         private bool HasRecipeWithInput(KitchenObjectAsset input) {
             CuttingRecipeAsset recipeAsset = GetCuttingRecipeByInput(input);
             return recipeAsset != null;
         }
-        
+
         private KitchenObjectAsset GetOutputByInput(KitchenObjectAsset input) {
             CuttingRecipeAsset recipeAsset = GetCuttingRecipeByInput(input);
             if (recipeAsset != null) {
@@ -140,9 +140,10 @@ namespace Counters {
                 return null;
             }
         }
+
         private CuttingRecipeAsset GetCuttingRecipeByInput(KitchenObjectAsset asset) {
             if (asset == null) return null;
-            
+
             foreach (CuttingRecipeAsset recipe in recipesArray) {
                 if (recipe.Input == asset) {
                     return recipe;
@@ -151,7 +152,5 @@ namespace Counters {
 
             return null;
         }
-
-       
     }
 }

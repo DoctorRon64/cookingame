@@ -13,14 +13,5 @@ namespace Counters {
             KitchenObject.SpawnKitchenObject(kitchenObjectAsset, player);
             OnPlayerGrabbedObject?.Invoke(EventArgs.Empty);
         }
-
-        public override void InteractAlt(Player player) {
-        }
-
-        public override void InteractAltHold(Player player) {
-        }
-
-        public override void InteractAltHoldCancel(Player player) {
-        }
     }
 }

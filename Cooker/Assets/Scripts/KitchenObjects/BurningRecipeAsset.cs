@@ -2,9 +2,9 @@
 
 namespace KitchenObjects {
     [CreateAssetMenu()]
-    public class CuttingRecipeAsset : DataAsset {
+    public class BurningRecipeAsset : DataAsset {
         public KitchenObjectAsset Input;
         public KitchenObjectAsset Output;
-        public float CuttingProgressMax;
+        public float BurningTimerMax;
     }
 }
