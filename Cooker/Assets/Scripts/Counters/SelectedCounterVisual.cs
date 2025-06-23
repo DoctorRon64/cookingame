@@ -9,7 +9,7 @@ namespace Counters {
             Player.Instance.OnSelectedCounterChanged.AddListener(OnSelectCounterChanged);
         }
 
-        private void OnSelectCounterChanged(object sender, Player.OnSelectedCounterChangedEventArgs e) {
+        private void OnSelectCounterChanged(object sender, Player.OnSelectedCounterChangedStruct e) {
             //Debug.Log(sender?.ToString(), e.selectedCounter);
             ActivatedObject((BaseCounter)e.HighlightedCounter == baseCounter);
         }

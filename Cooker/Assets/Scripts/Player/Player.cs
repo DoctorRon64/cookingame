@@ -6,8 +6,10 @@ using UnityEngine;
 
 public class Player : MonoBehaviour, IKitchenObjectParent {
     // Events
-    public class OnSelectedCounterChangedEventArgs : EventArgs { public IInteractable HighlightedCounter; }
-    [field: SerializeField] public Signal<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged { get; private set; }
+    public struct OnSelectedCounterChangedStruct {
+        public IInteractable HighlightedCounter;
+    }
+    [field: SerializeField] public Signal<OnSelectedCounterChangedStruct> OnSelectedCounterChanged { get; private set; }
 
     // State
     public bool IsWalking { get; private set; }
@@ -24,6 +26,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
     private Vector3 lastMoveDirection = Vector3.forward;
     private IInteractable selectedCounter;
     private IInteractable highlightedCounter;
+    private IInteractable previousHighlightCounter;
 
     private void Awake() {
         if (Instance != null) {
@@ -45,6 +48,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
     private void Update() {
         Move();
         DetectCounterInFront();
+        
+        
     }
 
     private void Move() {
@@ -85,6 +90,14 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
     }
 
     private void DetectCounterInFront() {
+        if (highlightedCounter != previousHighlightCounter) {
+            if (previousHighlightCounter != null && previousHighlightCounter != highlightedCounter) {
+                previousHighlightCounter.InteractAltHoldCancel(this);
+            }
+
+            previousHighlightCounter = highlightedCounter;
+        }
+        
         Vector3 origin = transform.position + Vector3.up * 0.5f;
 
         BaseCounter newCounter = null;
@@ -95,7 +108,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
         if ((BaseCounter)highlightedCounter == newCounter) return;
 
         highlightedCounter = newCounter;
-        OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs {
+        OnSelectedCounterChanged?.Invoke(this, new() {
             HighlightedCounter = highlightedCounter
         });
     }
