@@ -8,6 +8,7 @@ using UnityEngine;
 namespace Counters {
     public class CuttingCounter : BaseCounter {
         [SerializeField] private CuttingRecipeAsset[] recipesArray;
+        [SerializeField] private float cancelCutDistance = 1.5f;
         public readonly Signal OnCutting = new Signal();
         public readonly Signal<ProgressNormalize> OnProgressChanged = new();
         public struct ProgressNormalize { public float ProgressNormalizeFloat; }
@@ -76,6 +77,11 @@ namespace Counters {
             while (cuttingTimer < cuttingDuration) {
                 cuttingTimer += Time.deltaTime;
 
+                if (Vector3.Distance(player.transform.position, transform.position) > cancelCutDistance) {
+                    CancelCutting();
+                    yield break;
+                }
+                
                 int currentWhole = Mathf.FloorToInt(cuttingTimer * 2f);
                 if (currentWhole != lastInt) {
                     lastInt = currentWhole;
@@ -97,6 +103,15 @@ namespace Counters {
 
             ResetCuttingState();
             cuttingCoroutine = null;
+        }
+        
+        private void CancelCutting() {
+            if (cuttingCoroutine != null) {
+                StopCoroutine(cuttingCoroutine);
+                cuttingCoroutine = null;
+            }
+            ResetCuttingState();
+            OnProgressChanged?.Invoke(new () { ProgressNormalizeFloat = 0f });
         }
         
         private void ResetCuttingState() {

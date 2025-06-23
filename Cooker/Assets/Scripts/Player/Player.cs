@@ -6,10 +6,10 @@ using UnityEngine;
 
 public class Player : MonoBehaviour, IKitchenObjectParent {
     // Events
+    public Signal<OnSelectedCounterChangedStruct> OnSelectedCounterChanged { get; private set; }
     public struct OnSelectedCounterChangedStruct {
         public IInteractable HighlightedCounter;
     }
-    [field: SerializeField] public Signal<OnSelectedCounterChangedStruct> OnSelectedCounterChanged { get; private set; }
 
     // State
     public bool IsWalking { get; private set; }
@@ -26,7 +26,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
     private Vector3 lastMoveDirection = Vector3.forward;
     private IInteractable selectedCounter;
     private IInteractable highlightedCounter;
-    private IInteractable previousHighlightCounter;
 
     private void Awake() {
         if (Instance != null) {
@@ -40,16 +39,14 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
 
         _ = InputManager.Instance;
         InputManager.Instance.OnInteractButton.AddListener(HandleInteraction);
-        InputManager.Instance.OnAttackButton.AddListener(HandleInteractionAlt);
-        InputManager.Instance.OnAttackHoldStarted.AddListener(() => highlightedCounter?.InteractAltHold(this));  
-        InputManager.Instance.OnAttackHoldCanceled.AddListener(() => highlightedCounter?.InteractAltHoldCancel(this));  
+        InputManager.Instance.OnAttackButton.AddListener(() => highlightedCounter?.InteractAlt(this));
+        InputManager.Instance.OnAttackHoldStarted.AddListener(() => highlightedCounter?.InteractAltHold(this));
+        InputManager.Instance.OnAttackHoldCanceled.AddListener(() => highlightedCounter?.InteractAltHoldCancel(this));
     }
 
     private void Update() {
         Move();
         DetectCounterInFront();
-        
-        
     }
 
     private void Move() {
@@ -66,13 +63,15 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
 
         if (!canMove) {
             Vector3 moveDirX = new Vector3(moveDir.x, 0f, 0f).normalized;
-            canMove = moveDir.x != 0 && !Physics.CapsuleCast(capsuleBottom, capsuleTop, playerRadius, moveDirX, moveDistance);
+            canMove = moveDir.x != 0 &&
+                      !Physics.CapsuleCast(capsuleBottom, capsuleTop, playerRadius, moveDirX, moveDistance);
             if (canMove) {
                 moveDir = moveDirX;
             }
             else {
                 Vector3 moveDirZ = new Vector3(0f, 0f, moveDir.z).normalized;
-                canMove = moveDir.z != 0 && !Physics.CapsuleCast(capsuleBottom, capsuleTop, playerRadius, moveDirZ, moveDistance);
+                canMove = moveDir.z != 0 &&
+                          !Physics.CapsuleCast(capsuleBottom, capsuleTop, playerRadius, moveDirZ, moveDistance);
                 if (canMove) {
                     moveDir = moveDirZ;
                     canMove = true;
@@ -90,14 +89,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
     }
 
     private void DetectCounterInFront() {
-        if (highlightedCounter != previousHighlightCounter) {
-            if (previousHighlightCounter != null && previousHighlightCounter != highlightedCounter) {
-                previousHighlightCounter.InteractAltHoldCancel(this);
-            }
-
-            previousHighlightCounter = highlightedCounter;
-        }
-        
         Vector3 origin = transform.position + Vector3.up * 0.5f;
 
         BaseCounter newCounter = null;
@@ -120,15 +111,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
         OnSelectedCounterChanged?.Invoke(this, new() {
             HighlightedCounter = highlightedCounter
         });
-    }
-
-    private void HandleInteractionAlt() {
-        highlightedCounter?.InteractAlt(this);
-        
-        //selectedCounter = highlightedCounter != selectedCounter ? highlightedCounter : null;
-        /*OnSelectedCounterChanged?.Invoke(this, new() {
-            HighlightedCounter = highlightedCounter
-        });*/
     }
 
     public void SetKitchenObject(KitchenObject kitchenObject) => KitchenObject = kitchenObject;
