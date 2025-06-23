@@ -4,6 +4,8 @@ using KitchenObjects;
 using UnityEngine;
 
 public class Plate : KitchenObject {
+    public Signal<KitchenObjectAsset> OnIngredientAdded = new();
+    
     [SerializeField] private List<KitchenObjectAsset> whiteListObjs = new();
     private List<KitchenObjectAsset> kitchenObjAssets;
 
@@ -21,6 +23,7 @@ public class Plate : KitchenObject {
         }
         else {
             kitchenObjAssets.Add(asset);
+            OnIngredientAdded?.Invoke(asset);
             return true;
         }
     }
