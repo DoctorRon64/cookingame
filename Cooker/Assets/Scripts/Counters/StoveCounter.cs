@@ -51,7 +51,16 @@ public class StoveCounter : BaseCounter, IHasProgress {
             OnProgressChanged?.Invoke(new() { ProgressNormalizeFloat = 0f });
         }
         else if (HasKitchenObject() && player.HasKitchenObject()) {
-            Debug.LogWarning("CANT PLACE THAT OBJECT HERE");
+            if (player.KitchenObject.TryGetPlate(out Plate plate)) {
+                if (!plate.TryAddIngredient(KitchenObject.Asset)) return;
+                
+                KitchenObject.DestroySelf();
+                StoveStateMachine.Switch<StoveIdleState>();
+                OnProgressChanged?.Invoke(new() { ProgressNormalizeFloat = 0f });
+            }
+            else {
+                Debug.LogWarning("CANT PLACE THAT OBJECT HERE");
+            }
         }
     }
 
@@ -106,7 +115,7 @@ public class StoveFryingState : BaseState<StoveCounter> {
         
         if (Blackboard.FryingTimer >= Blackboard.FryingRecipeAsset.FryingTimerMax) {
             Blackboard.FryingTimer = 0;
-            Blackboard.KitchenObject.DestorySelf();
+            Blackboard.KitchenObject.DestroySelf();
             KitchenObject.SpawnKitchenObject(Blackboard.FryingRecipeAsset.Output, Blackboard);
 
             StateMachine.Switch<StoveFriedState>();
@@ -123,7 +132,7 @@ public class StoveFriedState : BaseState<StoveCounter> {
         
         if (Blackboard.BurningTimer >= Blackboard.BurningRecipeAsset.BurningTimerMax) {
             Blackboard.BurningTimer = 0;
-            Blackboard.KitchenObject.DestorySelf();
+            Blackboard.KitchenObject.DestroySelf();
             KitchenObject.SpawnKitchenObject(Blackboard.BurningRecipeAsset.Output, Blackboard);
 
             StateMachine.Switch<StoveBurnedState>();

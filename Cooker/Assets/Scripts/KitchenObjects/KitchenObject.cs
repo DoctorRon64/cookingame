@@ -17,7 +17,7 @@ namespace KitchenObjects {
             transform.localPosition = Vector3.zero;
         }
 
-        public void DestorySelf() {
+        public void DestroySelf() {
             KitchenObjectParent.ClearKitchenObject();
             Destroy(gameObject);
         }
@@ -27,6 +27,11 @@ namespace KitchenObjects {
             KitchenObject kitchenObject = instance.GetComponent<KitchenObject>();
             kitchenObject.SetKitchenObjectParent(parent);
             return kitchenObject;
+        }
+
+        public bool TryGetPlate(out Plate plate) {
+            plate = this as Plate;
+            return plate != null;
         }
     }
 }

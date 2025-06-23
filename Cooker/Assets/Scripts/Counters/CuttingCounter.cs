@@ -34,20 +34,15 @@ namespace Counters {
                 KitchenObject.SetKitchenObjectParent(player);
             }
             else if (HasKitchenObject() && player.HasKitchenObject()) {
-                Debug.LogWarning("CANT PLACE THAT OBJECT HERE");
+                if (player.KitchenObject.TryGetPlate(out Plate plate)) {
+                    if (plate.TryAddIngredient(KitchenObject.Asset)) {
+                        KitchenObject.DestroySelf();
+                    }
+                }
+                else {
+                    Debug.LogWarning("CANT PLACE THAT OBJECT HERE");
+                }
             }
-        }
-
-        public override void InteractAlt(Player player) {
-            /*if (!HasKitchenObject() || !HasRecipeWithInput(KitchenObject.Asset)) return;
-            cuttingProgress++;
-
-            CuttingRecipeAsset recipe = GetCuttingRecipeByInput(KitchenObject.Asset);
-            if (cuttingProgress < recipe.cuttingProgressMax) return;
-
-            KitchenObjectAsset output = GetOutputByInput(KitchenObject.Asset);
-            KitchenObject.DestorySelf();
-            KitchenObject.SpawnKitchenObject(output, this);*/
         }
 
         public override void InteractAltHold(Player player) {
@@ -85,7 +80,6 @@ namespace Counters {
                 if (currentWhole != lastInt) {
                     lastInt = currentWhole;
                     float stepValue = currentWhole * 0.5f;
-                    Debug.Log($"Passed whole unit: {stepValue}"); // or call a method/event
                     OnCutting?.Invoke();
                 }
 
@@ -97,7 +91,7 @@ namespace Counters {
             OnProgressChanged?.Invoke(new() { ProgressNormalizeFloat = 0f });
 
             KitchenObjectAsset output = GetOutputByInput(KitchenObject.Asset);
-            KitchenObject.DestorySelf();
+            KitchenObject.DestroySelf();
             KitchenObject.SpawnKitchenObject(output, this);
 
             ResetCuttingState();
