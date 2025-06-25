@@ -7,10 +7,10 @@ public class Plate : KitchenObject {
     public Signal<KitchenObjectAsset> OnIngredientAdded = new();
     
     [SerializeField] private List<KitchenObjectAsset> whiteListObjs = new();
-    private List<KitchenObjectAsset> kitchenObjAssets;
+    public List<KitchenObjectAsset> KitchenObjAssets { get; private set; }
 
     private void Awake() {
-        kitchenObjAssets = new();
+        KitchenObjAssets = new();
     }
 
     public bool TryAddIngredient(KitchenObjectAsset asset) {
@@ -18,11 +18,11 @@ public class Plate : KitchenObject {
             return false;
         }
 
-        if (kitchenObjAssets.Contains(asset)) {
+        if (KitchenObjAssets.Contains(asset)) {
             return false;
         }
         else {
-            kitchenObjAssets.Add(asset);
+            KitchenObjAssets.Add(asset);
             OnIngredientAdded?.Invoke(asset);
             return true;
         }
