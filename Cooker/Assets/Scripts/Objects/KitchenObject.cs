@@ -30,8 +30,13 @@ namespace KitchenObjects {
         }
 
         public bool TryGetPlate(out Plate plate) {
-            plate = this as Plate;
-            return plate != null;
+            if (this is Plate) {
+                plate = this as Plate;
+                return true;
+            } else {
+                plate = null;
+                return false;
+            }
         }
     }
 }

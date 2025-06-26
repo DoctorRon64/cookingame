@@ -1,5 +1,7 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 
 public class InputManager : Singleton<InputManager>, ISingleton {
     public Signal<UnityEngine.InputSystem.InputAction.CallbackContext> OnInteractButton { get; private set; }
