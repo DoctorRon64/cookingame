@@ -1,10 +1,12 @@
 using UnityEngine;
+using UnityEngine.Localization;
 
 namespace KitchenObjects {
     [CreateAssetMenu()]
     public class KitchenObjectAsset : DataAsset {
         [field:SerializeField] public GameObject Prefab { get; private set; }
         [field:SerializeField] public Sprite Icon { get; private set; }
-        public string Name => name;
+        
+        public string LocalizedName => new LocalizedString("UIText", name).GetLocalizedString();
     }
 }

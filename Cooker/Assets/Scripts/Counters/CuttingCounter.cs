@@ -9,7 +9,9 @@ namespace Counters {
     public class CuttingCounter : BaseCounter, IHasProgress {
         [SerializeField] private CuttingRecipeAsset[] recipesArray;
         [SerializeField] private float cancelCutDistance = 1.5f;
-        public readonly Signal OnCutting = new Signal();
+        
+        public static readonly SignalSender OnAnyCut = new();
+        public readonly Signal OnCutting = new();
         public Signal<IHasProgress.ProgressNormalize> OnProgressChanged { get; } = new();
         
         private float cuttingDuration;
@@ -18,6 +20,7 @@ namespace Counters {
 
         public void OnDestroy() {
             OnProgressChanged.Clear();
+            OnCutting.Clear();
         }
 
         public override void Interact(Player player) {
@@ -81,6 +84,7 @@ namespace Counters {
                     lastInt = currentWhole;
                     float stepValue = currentWhole * 0.5f;
                     OnCutting?.Invoke();
+                    OnAnyCut?.Invoke(this);
                 }
 
                 OnProgressChanged?.Invoke(new() { ProgressNormalizeFloat = cuttingTimer / recipe.CuttingProgressMax });

@@ -37,6 +37,37 @@ public class Signal : SignalBase {
     }
 }
 
+public class SignalSender : SignalBase {
+    public void Invoke(object sender) {
+        foreach (Delegate listener in Listeners) {
+            switch (listener) {
+                case Action action:
+                    action.Invoke();
+                    break;
+                case Action<object> senderAction:
+                    senderAction.Invoke(sender);
+                    break;
+            }
+        }
+    }
+
+    public void AddListener(Action callback) {
+        AddListener((Delegate)callback);
+    }
+
+    public void AddListener(Action<object> senderCallback) {
+        AddListener((Delegate)senderCallback);
+    }
+
+    public void RemoveListener(Action callback) {
+        RemoveListener((Delegate)callback);
+    }
+
+    public void RemoveListener(Action<object> senderCallback) {
+        RemoveListener((Delegate)senderCallback);
+    }
+}
+
 public class Signal<T> : SignalBase {
     public void AddListener(Action<T> callback) {
         AddListener((Delegate)callback);

@@ -7,6 +7,8 @@ using UnityEngine;
 public class Player : MonoBehaviour, IKitchenObjectParent {
     // Events
     public Signal<OnSelectedCounterChangedStruct> OnSelectedCounterChanged { get; private set; }
+    public Signal OnPickedSomething { get; private set; } = new();
+    
     public struct OnSelectedCounterChangedStruct {
         public IInteractable HighlightedCounter;
     }
@@ -47,6 +49,11 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
     private void Update() {
         Move();
         DetectCounterInFront();
+    }
+
+    private void OnDestroy() {
+        OnSelectedCounterChanged.Clear();
+        OnPickedSomething.Clear();
     }
 
     private void Move() {
@@ -113,7 +120,13 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
         });
     }
 
-    public void SetKitchenObject(KitchenObject kitchenObject) => KitchenObject = kitchenObject;
+    public void SetKitchenObject(KitchenObject kitchenObject) {
+        KitchenObject = kitchenObject;
+
+        if (kitchenObject != null) {
+            OnPickedSomething?.Invoke();
+        }
+    }
     public void ClearKitchenObject() => KitchenObject = null;
     public bool HasKitchenObject() => KitchenObject != null;
 }

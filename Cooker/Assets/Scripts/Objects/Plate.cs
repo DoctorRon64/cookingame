@@ -4,7 +4,7 @@ using KitchenObjects;
 using UnityEngine;
 
 public class Plate : KitchenObject {
-    public Signal<KitchenObjectAsset> OnIngredientAdded = new();
+    public readonly Signal<KitchenObjectAsset> OnIngredientAdded = new();
     
     [SerializeField] private List<KitchenObjectAsset> whiteListObjs = new();
     public List<KitchenObjectAsset> KitchenObjAssets { get; private set; }

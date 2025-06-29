@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 679bb19af35649448503fce265661c0e, type: 3}
-  m_Name: MegaBurger
+  m_Name: recipe-mega-burger
   m_EditorClassIdentifier: 
   KitchenObjAssets:
   - {fileID: 11400000, guid: 4710183a8f0107649b2720f2a5707144, type: 2}
@@ -18,3 +18,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9377b19a64257134ebb4d5e7d00e1bda, type: 2}
   - {fileID: 11400000, guid: 63be908cc1e7cf047931d75751af7917, type: 2}
   - {fileID: 11400000, guid: 80277cb295158964e9939eac589680f7, type: 2}
+  recipeNameKey: mega-burger-recipeasset

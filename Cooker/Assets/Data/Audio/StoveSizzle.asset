@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 679bb19af35649448503fce265661c0e, type: 3}
-  m_Name: Salade
+  m_Script: {fileID: 11500000, guid: 4a084ae56907416f9421105958dc109e, type: 3}
+  m_Name: StoveSizzle
   m_EditorClassIdentifier: 
-  KitchenObjAssets:
-  - {fileID: 11400000, guid: 63be908cc1e7cf047931d75751af7917, type: 2}
-  - {fileID: 11400000, guid: 80277cb295158964e9939eac589680f7, type: 2}
+  Audio:
+  - {fileID: 8300000, guid: 511c1cbfb8b48b64083aec78fe17115f, type: 3}

@@ -8,6 +8,8 @@ public class DeliveryManager : SingletonMono<DeliveryManager> {
     [SerializeField] private float recipeTimerMax = 5f;
 
     public readonly Signal OnRecipeSpawned = new();
+    public readonly Signal OnRecipeSuccess = new();
+    public readonly Signal OnRecipeFailed = new();
     public readonly Signal<RecipeAsset> OnRecipeDelivered = new();
     
     public List<RecipeAsset> WaitingRecipes { get; private set; }
@@ -17,7 +19,16 @@ public class DeliveryManager : SingletonMono<DeliveryManager> {
         base.Awake();
         WaitingRecipes = new();
     }
-    
+
+    protected override void OnDestroy() {
+        base.OnDestroy();
+        
+        OnRecipeSpawned.Clear();
+        OnRecipeSuccess.Clear();
+        OnRecipeFailed.Clear();
+        OnRecipeDelivered.Clear();
+    }
+
     private void Update() {
         recipeTimer -= Time.deltaTime;
         if (!(recipeTimer <= 0)) return;
@@ -53,7 +64,11 @@ public class DeliveryManager : SingletonMono<DeliveryManager> {
             if (!plateMatch) continue;
             WaitingRecipes.RemoveAt(i);
             OnRecipeDelivered?.Invoke(waitingRecipe);
+            OnRecipeSuccess?.Invoke();
+            
             return;
         }
+        
+        OnRecipeFailed?.Invoke();
     }
 }

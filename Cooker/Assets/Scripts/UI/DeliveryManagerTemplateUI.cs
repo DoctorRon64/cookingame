@@ -14,7 +14,7 @@ public class DeliveryManagerTemplateUI : MonoBehaviour {
     }
 
     public void SetRecipeAsset(RecipeAsset recipeAsset) {
-        deliveryText.text = recipeAsset.RecipeName;
+        deliveryText.text = recipeAsset.LocalizedName;
 
         foreach (Transform child in iconContainer) {
             if (child == iconTemplate) continue;
