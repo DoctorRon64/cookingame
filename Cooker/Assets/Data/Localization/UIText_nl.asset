@@ -38,6 +38,18 @@ MonoBehaviour:
     m_Localized: Salade
     m_Metadata:
       m_Items: []
+  - m_Id: 1860733334708224
+    m_Localized: een
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1860819997417472
+    m_Localized: twee
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1860856370421760
+    m_Localized: drie
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class StateMachine<T> {
     private IState<T> currentState;
+    public IState<T> CurrentState => currentState;
     private readonly Dictionary<Type, IState<T>> allStates = new Dictionary<Type, IState<T>>();
     public T Blackboard { get; private set; }
+    
     public Signal<IState<T>> OnStateChanged { get; private set; }
-
+    
     public StateMachine(T blackboard) {
         Blackboard = blackboard;
         OnStateChanged = new();
@@ -46,7 +48,6 @@ public class StateMachine<T> {
         Debug.Log("initalize State: " + stateInstance);
         stateInstance.OnInitialize(this);
     }
-
 
     public void RemoveState<U>() {
         if (!allStates.ContainsKey(typeof(U))) return;

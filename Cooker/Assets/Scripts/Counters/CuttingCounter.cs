@@ -79,6 +79,11 @@ namespace Counters {
                     yield break;
                 }
 
+                if (player.HasKitchenObject()) {
+                    CancelCutting();
+                    yield break;
+                }
+
                 int currentWhole = Mathf.FloorToInt(cuttingTimer * 2f);
                 if (currentWhole != lastInt) {
                     lastInt = currentWhole;
@@ -94,10 +99,10 @@ namespace Counters {
 
             OnProgressChanged?.Invoke(new() { ProgressNormalizeFloat = 0f });
 
-            KitchenObjectAsset output = GetOutputByInput(KitchenObject.Asset);
+            KitchenObjectAsset cacheOutput = KitchenObject.Asset;
             KitchenObject.DestroySelf();
-            KitchenObject.SpawnKitchenObject(output, this);
-
+            KitchenObject.SpawnKitchenObject(GetOutputByInput(cacheOutput), this);
+            
             ResetCuttingState();
             cuttingCoroutine = null;
         }

@@ -3,7 +3,7 @@ using Counters;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class SoundManager : SingletonMono<SoundManager> {
+public class SoundManager : MonoSingleton<SoundManager> {
     [SerializeField] private AudioAssetLib library;
 
     private void Start() {

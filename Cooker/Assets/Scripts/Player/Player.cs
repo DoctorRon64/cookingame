@@ -8,7 +8,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
     // Events
     public Signal<OnSelectedCounterChangedStruct> OnSelectedCounterChanged { get; private set; }
     public Signal OnPickedSomething { get; private set; } = new();
-    
+
     public struct OnSelectedCounterChangedStruct {
         public IInteractable HighlightedCounter;
     }
@@ -39,11 +39,10 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
         Instance = this;
         OnSelectedCounterChanged = new();
 
-        _ = InputManager.Instance;
-        InputManager.Instance.OnInteractButton.AddListener(HandleInteraction);
-        InputManager.Instance.OnAttackButton.AddListener(() => highlightedCounter?.InteractAlt(this));
-        InputManager.Instance.OnAttackHoldStarted.AddListener(() => highlightedCounter?.InteractAltHold(this));
-        InputManager.Instance.OnAttackHoldCanceled.AddListener(() => highlightedCounter?.InteractAltHoldCancel(this));
+        InputManager.Instance.OnInteractButton.AddListener(InputManager_OnInteractButton);
+        InputManager.Instance.OnAttackButton.AddListener(InputManager_OnAttackButton);
+        InputManager.Instance.OnAttackHoldStarted.AddListener(InputManager_OnAttackHoldStarted);
+        InputManager.Instance.OnAttackHoldCanceled.AddListener(InputManager_OnAttackHoldCanceled);
     }
 
     private void Update() {
@@ -74,8 +73,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
                       !Physics.CapsuleCast(capsuleBottom, capsuleTop, playerRadius, moveDirX, moveDistance);
             if (canMove) {
                 moveDir = moveDirX;
-            }
-            else {
+            } else {
                 Vector3 moveDirZ = new Vector3(0f, 0f, moveDir.z).normalized;
                 canMove = moveDir.z != 0 &&
                           !Physics.CapsuleCast(capsuleBottom, capsuleTop, playerRadius, moveDirZ, moveDistance);
@@ -111,13 +109,30 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
         });
     }
 
-    private void HandleInteraction(UnityEngine.InputSystem.InputAction.CallbackContext ctx) {
+    private void InputManager_OnInteractButton(UnityEngine.InputSystem.InputAction.CallbackContext ctx) {
+        if (!GameManager.Instance.IsGamePlaying()) return;
+
         highlightedCounter?.Interact(this);
         selectedCounter = highlightedCounter != selectedCounter ? highlightedCounter : null;
 
         OnSelectedCounterChanged?.Invoke(this, new() {
             HighlightedCounter = highlightedCounter
         });
+    }
+
+    private void InputManager_OnAttackButton() {
+        if (!GameManager.Instance.IsGamePlaying()) return;
+        highlightedCounter?.InteractAlt(this);
+    }
+
+    private void InputManager_OnAttackHoldStarted() {
+        if (!GameManager.Instance.IsGamePlaying()) return;
+        highlightedCounter?.InteractAltHold(this);
+    }
+
+    private void InputManager_OnAttackHoldCanceled() {
+        if (!GameManager.Instance.IsGamePlaying()) return;
+        highlightedCounter?.InteractAltHoldCancel(this);
     }
 
     public void SetKitchenObject(KitchenObject kitchenObject) {
@@ -127,6 +142,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
             OnPickedSomething?.Invoke();
         }
     }
+
     public void ClearKitchenObject() => KitchenObject = null;
     public bool HasKitchenObject() => KitchenObject != null;
 }

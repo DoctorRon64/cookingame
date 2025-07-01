@@ -35,6 +35,18 @@ MonoBehaviour:
     m_Key: recipe-salade
     m_Metadata:
       m_Items: []
+  - m_Id: 1860733334708224
+    m_Key: game-countdown-start-1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1860819997417472
+    m_Key: game-countdown-start-2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1860856370421760
+    m_Key: game-countdown-start-3
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

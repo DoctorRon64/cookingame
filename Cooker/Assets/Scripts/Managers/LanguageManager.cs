@@ -2,7 +2,7 @@
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 
-public class LanguageManager : SingletonMono<LanguageManager> {
+public class LanguageManager : MonoSingleton<LanguageManager> {
     
     public readonly Signal<string> OnLanguageChanged = new();
     

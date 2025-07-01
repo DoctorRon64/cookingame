@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using KitchenObjects;
 using UnityEngine;
 
-public class DeliveryManager : SingletonMono<DeliveryManager> {
+public class DeliveryManager : MonoSingleton<DeliveryManager> {
     [SerializeField] private RecipeAssetsLib recipeLibrary;
     [SerializeField] private float recipeTimerMax = 5f;
 
