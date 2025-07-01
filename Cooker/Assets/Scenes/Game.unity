@@ -1435,7 +1435,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 3
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 1037f62e571aedd41bc091def8f2e1db, type: 2}
   m_sharedMaterial: {fileID: 3306908713356438218, guid: 1037f62e571aedd41bc091def8f2e1db, type: 2}
@@ -1528,9 +1528,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   countdownText: {fileID: 657090495}
   localizedKeys:
-  - game-countdown-start-1
-  - game-countdown-start-2
+  - game-countdown-start
   - game-countdown-start-3
+  - game-countdown-start-2
+  - game-countdown-start-1
 --- !u!1 &667254038
 GameObject:
   m_ObjectHideFlags: 0
@@ -3008,6 +3009,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10c1615a13124509b3d1d1995e3fab4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectedLanguage: 1
 --- !u!4 &1587498191
 Transform:
   m_ObjectHideFlags: 0

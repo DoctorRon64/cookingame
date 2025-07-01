@@ -1,19 +1,36 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 
 public class LanguageManager : MonoSingleton<LanguageManager> {
+    public enum SupportedLanguage
+    {
+        English,
+        Spanish,
+        Dutch
+    }
     
     public readonly Signal<string> OnLanguageChanged = new();
     
-    [ContextMenu(" set spanish languages")]
-    public void SetSpanish() {
-        ChangeLanguage("es");
-    }
+    [SerializeField] private SupportedLanguage selectedLanguage;
     
-    [ContextMenu(" set english languages")]
-    public void SetEnglish() {
-       ChangeLanguage("en");
+    private void OnValidate()
+    {
+        switch (selectedLanguage)
+        {
+            case SupportedLanguage.English:
+                ChangeLanguage("en");
+                break;
+            case SupportedLanguage.Spanish:
+                ChangeLanguage("es");
+                break;
+            case SupportedLanguage.Dutch:
+                ChangeLanguage("nl");
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
     
     private void ChangeLanguage(string languageCode)

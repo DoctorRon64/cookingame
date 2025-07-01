@@ -50,6 +50,10 @@ MonoBehaviour:
     m_Localized: drie
     m_Metadata:
       m_Items: []
+  - m_Id: 1871280599982080
+    m_Localized: Ga!!
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -47,6 +47,10 @@ MonoBehaviour:
     m_Key: game-countdown-start-3
     m_Metadata:
       m_Items: []
+  - m_Id: 1871280599982080
+    m_Key: game-countdown-start
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

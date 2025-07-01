@@ -5,7 +5,7 @@ using UnityEngine.Localization;
 
 public class GameStartCountdownUI : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI countdownText;
-    [SerializeField] private string[] localizedKeys = new string[3];
+    [SerializeField] private string[] localizedKeys = new string[4];
 
     private void Start() {
         gameObject.SetActive(false);
