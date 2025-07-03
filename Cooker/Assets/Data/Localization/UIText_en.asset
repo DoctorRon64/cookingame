@@ -54,6 +54,16 @@ MonoBehaviour:
     m_Localized: Go!!
     m_Metadata:
       m_Items: []
+  - m_Id: 2477107337748480
+    m_Localized: Game Over
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2477277286752256
+    m_Localized: 'Dishes delivered
+
+'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

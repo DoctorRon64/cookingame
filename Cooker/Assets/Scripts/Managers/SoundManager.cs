@@ -15,7 +15,7 @@ public class SoundManager : MonoSingleton<SoundManager> {
         TrashCounter.OnAnyObjectTrashed.AddListener(TrashCounters_OnAnyObjectTrashed);
     }
 
-    private void DeliveryManager_OnRecipeSuccess() {
+    private void DeliveryManager_OnRecipeSuccess(int value) {
         DeliveryCounter counter = DeliveryCounter.Instance;
         PlaySound(library.DeliverySuccess, counter.transform.position);
     }

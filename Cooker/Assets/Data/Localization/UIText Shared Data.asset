@@ -51,6 +51,14 @@ MonoBehaviour:
     m_Key: game-countdown-start
     m_Metadata:
       m_Items: []
+  - m_Id: 2477107337748480
+    m_Key: game-over-title-text
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2477277286752256
+    m_Key: game-over-recipes-deliverd
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -14,7 +14,7 @@ public class StateMachine<T> {
         Blackboard = blackboard;
         OnStateChanged = new();
     }
-
+    
     public void OnFixedUpdate() {
         currentState?.OnFixedUpdate();
     }

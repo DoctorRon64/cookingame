@@ -8,12 +8,13 @@ public class DeliveryManager : MonoSingleton<DeliveryManager> {
     [SerializeField] private float recipeTimerMax = 5f;
 
     public readonly Signal OnRecipeSpawned = new();
-    public readonly Signal OnRecipeSuccess = new();
     public readonly Signal OnRecipeFailed = new();
+    public readonly Signal<int> OnRecipeSuccess = new();
     public readonly Signal<RecipeAsset> OnRecipeDelivered = new();
     
     public List<RecipeAsset> WaitingRecipes { get; private set; }
     private float recipeTimer;
+    private int dishesDeliveredAmount;
 
     protected override void Awake() {
         base.Awake();
@@ -62,9 +63,11 @@ public class DeliveryManager : MonoSingleton<DeliveryManager> {
             }
 
             if (!plateMatch) continue;
+
+            dishesDeliveredAmount++;
             WaitingRecipes.RemoveAt(i);
             OnRecipeDelivered?.Invoke(waitingRecipe);
-            OnRecipeSuccess?.Invoke();
+            OnRecipeSuccess?.Invoke(dishesDeliveredAmount);
             
             return;
         }
